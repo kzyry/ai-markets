@@ -86,6 +86,11 @@
     <div class="widget-value" id="w-pnl-last"></div>
     <div class="widget-sub" id="w-pnl-last-sub"></div>
   </div>
+  <div class="widget">
+    <div class="widget-label">P&L по цели</div>
+    <div class="widget-value" id="w-pnl-target"></div>
+    <div class="widget-sub" id="w-pnl-target-sub"></div>
+  </div>
 </div>
 
 <div class="tabs">
@@ -9266,7 +9271,7 @@
   </div>
 
 <script>
-const STATS = [{"total": 294, "wins": 117, "win_rate": 39.8, "avg_pnl": 0.3, "total_pnl_avg": 38.0, "total_pnl_last": 73.0}, {"total": 369, "wins": 137, "win_rate": 37.2, "avg_pnl": 1.2, "total_pnl_avg": 144.0, "total_pnl_last": 275.0}, {"total": 324, "wins": 146, "win_rate": 45.3, "avg_pnl": 2.4, "total_pnl_avg": 166.0, "total_pnl_last": 285.0}, {"total": 148, "wins": 48, "win_rate": 33.1, "avg_pnl": -0.4, "total_pnl_avg": 36.0, "total_pnl_last": -23.0}];
+const STATS = [{"total": 294, "wins": 117, "win_rate": 39.8, "avg_pnl": 0.3, "total_pnl_avg": 38.0, "total_pnl_last": 73.0, "total_pnl_target": 396.0, "target_count": 77}, {"total": 369, "wins": 137, "win_rate": 37.2, "avg_pnl": 1.2, "total_pnl_avg": 144.0, "total_pnl_last": 275.0, "total_pnl_target": 669.0, "target_count": 94}, {"total": 324, "wins": 146, "win_rate": 45.3, "avg_pnl": 2.4, "total_pnl_avg": 166.0, "total_pnl_last": 285.0, "total_pnl_target": 459.0, "target_count": 69}, {"total": 148, "wins": 48, "win_rate": 33.1, "avg_pnl": -0.4, "total_pnl_avg": 36.0, "total_pnl_last": -23.0, "total_pnl_target": 142.0, "target_count": 32}];
 
 function updateWidgets(idx) {
   const s = STATS[idx];
@@ -9292,6 +9297,12 @@ function updateWidgets(idx) {
   pnlLastEl.textContent = sLast + Math.abs(s.total_pnl_last).toLocaleString();
   pnlLastEl.className = 'widget-value ' + (s.total_pnl_last >= 0 ? 'pos' : 'neg');
   document.getElementById('w-pnl-last-sub').textContent = invSub;
+
+  const pnlTargetEl = document.getElementById('w-pnl-target');
+  const sTgt = s.total_pnl_target >= 0 ? '+$' : '-$';
+  pnlTargetEl.textContent = sTgt + Math.abs(s.total_pnl_target).toLocaleString();
+  pnlTargetEl.className = 'widget-value ' + (s.total_pnl_target >= 0 ? 'pos' : 'neg');
+  document.getElementById('w-pnl-target-sub').textContent = s.target_count + ' из ' + s.total + ' дошли до цели';
 }
 
 updateWidgets(0);
