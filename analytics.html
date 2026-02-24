@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AI Markets Analytics</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 20px; background: #fafafa; color: #333; }
+  nav { display: flex; gap: 24px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
+  nav a { font-size: 14px; font-weight: 600; color: #888; text-decoration: none; }
+  nav a:hover { color: #333; }
+  nav a.active { color: #333; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: -13px; }
+  h2 { margin-bottom: 20px; font-size: 18px; }
+  h3 { margin: 28px 0 6px; font-size: 15px; color: #333; }
+  .section-desc { font-size: 12px; color: #888; margin-bottom: 10px; }
+
+  .model-cards { display: flex; gap: 12px; margin-bottom: 8px; }
+  .model-card { flex: 1; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 16px; }
+  .mc-name { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .mc-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 3px; }
+  .mc-label { color: #888; }
+  .mc-val { font-weight: 600; }
+  .mc-sub { font-size: 10px; color: #bbb; margin-top: 6px; text-align: right; }
+
+  .section-pair { display: flex; gap: 16px; }
+  .section-half { flex: 1; }
+  .section-half h4 { font-size: 13px; color: #555; margin-bottom: 6px; }
+
+  table { border-collapse: collapse; font-size: 12px; background: #fff; width: 100%; margin-bottom: 4px; }
+  th, td { border: 1px solid #e0e0e0; padding: 5px 10px; text-align: center; white-space: nowrap; }
+  th { background: #f5f5f5; font-weight: 600; font-size: 11px; }
+  td.left, th.left { text-align: left; }
+  .market-name { max-width: 350px; overflow: hidden; text-overflow: ellipsis; }
+  .market-name a { color: #1a73e8; text-decoration: none; }
+  .market-name a:hover { text-decoration: underline; }
+
+  .pos { color: #4CAF50; }
+  .neg { color: #d32f2f; }
+
+  tbody tr:hover td { background: #f8f8f8; }
+
+  .highlight-row { background: #f0f7ff; }
+  tr.highlight-row td { background: #f0f7ff; }
+  tr.highlight-row:hover td { background: #e6f0fa; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Predictions</a>
+  <a href="analytics.html" class="active">Analytics</a>
+</nav>
+
+<h2>AI Markets Analytics</h2>
+
+<h3>Model Summary</h3>
+<p class="section-desc">Performance of each AI model — all BUY recommendations, $10 per bet</p>
+<div class="model-cards">
+      <div class="model-card">
+        <div class="mc-name" style="color:#E07B39">Claude</div>
+        <div class="mc-row"><span class="mc-label">Bets</span><span class="mc-val">294</span></div>
+        <div class="mc-row"><span class="mc-label">Win Rate</span><span class="mc-val pos">39.8%</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (avg)</span><span class="mc-val pos">+$37.1</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (last)</span><span class="mc-val pos">+$64.7</span></div>
+        <div class="mc-sub">at $10 per bet</div>
+      </div>
+      <div class="model-card">
+        <div class="mc-name" style="color:#2196F3">DeepSeek</div>
+        <div class="mc-row"><span class="mc-label">Bets</span><span class="mc-val">371</span></div>
+        <div class="mc-row"><span class="mc-label">Win Rate</span><span class="mc-val pos">37.5%</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (avg)</span><span class="mc-val pos">+$131.8</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (last)</span><span class="mc-val pos">+$253.6</span></div>
+        <div class="mc-sub">at $10 per bet</div>
+      </div>
+      <div class="model-card">
+        <div class="mc-name" style="color:#1565C0">Gemini</div>
+        <div class="mc-row"><span class="mc-label">Bets</span><span class="mc-val">322</span></div>
+        <div class="mc-row"><span class="mc-label">Win Rate</span><span class="mc-val pos">45.0%</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (avg)</span><span class="mc-val pos">+$154.2</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (last)</span><span class="mc-val pos">+$265.4</span></div>
+        <div class="mc-sub">at $10 per bet</div>
+      </div>
+      <div class="model-card">
+        <div class="mc-name" style="color:#9C27B0">Perplexity</div>
+        <div class="mc-row"><span class="mc-label">Bets</span><span class="mc-val">148</span></div>
+        <div class="mc-row"><span class="mc-label">Win Rate</span><span class="mc-val neg">33.8%</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (avg)</span><span class="mc-val pos">+$37.0</span></div>
+        <div class="mc-row"><span class="mc-label">P&L (last)</span><span class="mc-val neg">$-23.8</span></div>
+        <div class="mc-sub">at $10 per bet</div>
+      </div>
+</div>
+
+<h3>Win Rate by Market Category</h3>
+<p class="section-desc">Which market types do models predict best (DeepSeek & Gemini — top performers)</p>
+<div class="section-pair">
+      <div class="section-half">
+        <h4>DeepSeek</h4>
+        <table>
+          <thead><tr><th class="left">Category</th><th>Bets</th><th>Win Rate</th><th>P&L</th></tr></thead>
+          <tbody>
+          <tr>
+            <td class="left">Elections</td>
+            <td>175</td>
+            <td><span class="neg">33.1%</span></td>
+            <td><span class="pos">+$45.5</span></td>
+          </tr>
+          <tr>
+            <td class="left">Finance</td>
+            <td>44</td>
+            <td><span class="neg">40.9%</span></td>
+            <td><span class="neg">$-16.5</span></td>
+          </tr>
+          <tr>
+            <td class="left">AI</td>
+            <td>32</td>
+            <td><span class="neg">12.5%</span></td>
+            <td><span class="neg">$-97.9</span></td>
+          </tr>
+          <tr>
+            <td class="left">Geopolitics</td>
+            <td>31</td>
+            <td><span class="neg">38.7%</span></td>
+            <td><span class="pos">+$51.1</span></td>
+          </tr>
+          <tr>
+            <td class="left">Science</td>
+            <td>30</td>
+            <td><span class="pos">63.3%</span></td>
+            <td><span class="pos">+$247.7</span></td>
+          </tr>
+          <tr>
+            <td class="left">Other</td>
+            <td>21</td>
+            <td><span class="pos">61.9%</span></td>
+            <td><span class="pos">+$32.2</span></td>
+          </tr>
+          <tr>
+            <td class="left">Crypto</td>
+            <td>17</td>
+            <td><span class="neg">47.1%</span></td>
+            <td><span class="neg">$-5.2</span></td>
+          </tr>
+          <tr>
+            <td class="left">Culture</td>
+            <td>16</td>
+            <td><span class="neg">37.5%</span></td>
+            <td><span class="pos">+$12.8</span></td>
+          </tr>
+          <tr>
+            <td class="left">Politics</td>
+            <td>5</td>
+            <td><span class="neg">20.0%</span></td>
+            <td><span class="neg">$-16.0</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="section-half">
+        <h4>Gemini</h4>
+        <table>
+          <thead><tr><th class="left">Category</th><th>Bets</th><th>Win Rate</th><th>P&L</th></tr></thead>
+          <tbody>
+          <tr>
+            <td class="left">Elections</td>
+            <td>113</td>
+            <td><span class="pos">57.5%</span></td>
+            <td><span class="pos">+$220.8</span></td>
+          </tr>
+          <tr>
+            <td class="left">Finance</td>
+            <td>47</td>
+            <td><span class="neg">34.0%</span></td>
+            <td><span class="neg">$-44.5</span></td>
+          </tr>
+          <tr>
+            <td class="left">Crypto</td>
+            <td>32</td>
+            <td><span class="neg">31.2%</span></td>
+            <td><span class="pos">+$26.3</span></td>
+          </tr>
+          <tr>
+            <td class="left">Other</td>
+            <td>28</td>
+            <td><span class="pos">53.6%</span></td>
+            <td><span class="pos">+$21.8</span></td>
+          </tr>
+          <tr>
+            <td class="left">Science</td>
+            <td>26</td>
+            <td><span class="pos">61.5%</span></td>
+            <td><span class="pos">+$142.7</span></td>
+          </tr>
+          <tr>
+            <td class="left">Geopolitics</td>
+            <td>24</td>
+            <td><span class="neg">45.8%</span></td>
+            <td><span class="pos">+$2.9</span></td>
+          </tr>
+          <tr>
+            <td class="left">AI</td>
+            <td>24</td>
+            <td><span class="neg">12.5%</span></td>
+            <td><span class="neg">$-72.5</span></td>
+          </tr>
+          <tr>
+            <td class="left">Culture</td>
+            <td>23</td>
+            <td><span class="neg">34.8%</span></td>
+            <td><span class="neg">$-11.8</span></td>
+          </tr>
+          <tr>
+            <td class="left">Politics</td>
+            <td>5</td>
+            <td><span class="neg">20.0%</span></td>
+            <td><span class="neg">$-20.4</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+</div>
+
+<h3>Win Rate by Entry Price</h3>
+<p class="section-desc">How entry price affects probability of profit (all models combined)</p>
+<table>
+  <thead><tr><th class="left">Price Range</th><th>Bets</th><th>Win Rate</th><th>P&L</th></tr></thead>
+  <tbody>
+          <tr>
+            <td class="left">0–10¢</td>
+            <td>410</td>
+            <td><span class="neg">29.3%</span></td>
+            <td><span class="pos">+$258.8</span></td>
+          </tr>
+          <tr>
+            <td class="left">10–20¢</td>
+            <td>153</td>
+            <td><span class="neg">34.6%</span></td>
+            <td><span class="pos">+$90.4</span></td>
+          </tr>
+          <tr>
+            <td class="left">20–30¢</td>
+            <td>90</td>
+            <td><span class="neg">41.1%</span></td>
+            <td><span class="pos">+$14.5</span></td>
+          </tr>
+          <tr>
+            <td class="left">30–40¢</td>
+            <td>100</td>
+            <td><span class="neg">36.0%</span></td>
+            <td><span class="neg">$-6.1</span></td>
+          </tr>
+          <tr>
+            <td class="left">40–50¢</td>
+            <td>92</td>
+            <td><span class="neg">35.9%</span></td>
+            <td><span class="neg">$-48.7</span></td>
+          </tr>
+          <tr>
+            <td class="left">50–60¢</td>
+            <td>166</td>
+            <td><span class="pos">56.6%</span></td>
+            <td><span class="pos">+$207.6</span></td>
+          </tr>
+          <tr>
+            <td class="left">60–70¢</td>
+            <td>55</td>
+            <td><span class="pos">65.5%</span></td>
+            <td><span class="pos">+$14.7</span></td>
+          </tr>
+          <tr>
+            <td class="left">70–80¢</td>
+            <td>29</td>
+            <td><span class="pos">72.4%</span></td>
+            <td><span class="pos">+$23.0</span></td>
+          </tr>
+          <tr>
+            <td class="left">80–90¢</td>
+            <td>12</td>
+            <td><span class="pos">66.7%</span></td>
+            <td><span class="pos">+$5.4</span></td>
+          </tr>
+          <tr>
+            <td class="left">90–100¢</td>
+            <td>28</td>
+            <td><span class="neg">46.4%</span></td>
+            <td><span class="pos">+$0.3</span></td>
+          </tr>
+  </tbody>
+</table>
+
+<h3>Model Consensus</h3>
+<p class="section-desc">When multiple models agree on a bet, win rate increases</p>
+<table>
+  <thead><tr><th>Models Agree</th><th>Bets</th><th>Win Rate</th><th>P&L (avg)</th><th>P&L (last)</th></tr></thead>
+  <tbody>
+          <tr>
+            <td>1+</td>
+            <td>651</td>
+            <td><span class="neg">37.2%</span></td>
+            <td><span class="pos">+$107.4</span></td>
+            <td><span class="pos">+$160.4</span></td>
+          </tr>
+          <tr>
+            <td>2+</td>
+            <td>338</td>
+            <td><span class="neg">39.9%</span></td>
+            <td><span class="pos">+$30.5</span></td>
+            <td><span class="pos">+$118.1</span></td>
+          </tr>
+          <tr>
+            <td>3+</td>
+            <td>118</td>
+            <td><span class="neg">42.4%</span></td>
+            <td><span class="pos">+$77.0</span></td>
+            <td><span class="pos">+$155.0</span></td>
+          </tr>
+          <tr>
+            <td>4+</td>
+            <td>27</td>
+            <td><span class="neg">37.0%</span></td>
+            <td><span class="pos">+$24.6</span></td>
+            <td><span class="pos">+$15.6</span></td>
+          </tr>
+  </tbody>
+</table>
+
+<h3>Best Strategies</h3>
+<p class="section-desc">Combining filters for maximum win rate</p>
+<table>
+  <thead><tr><th class="left">Strategy</th><th>Bets</th><th>Win Rate</th><th>P&L (avg)</th><th>P&L (last)</th></tr></thead>
+  <tbody>
+          <tr>
+            <td class="left">All bets (any model)</td>
+            <td>651</td>
+            <td><span class="neg">37.2%</span></td>
+            <td><span class="pos">+$107.4</span></td>
+            <td><span class="pos">+$160.4</span></td>
+          </tr>
+          <tr>
+            <td class="left">Entry 50–90¢</td>
+            <td>172</td>
+            <td><span class="pos">58.1%</span></td>
+            <td><span class="pos">+$123.3</span></td>
+            <td><span class="pos">+$130.1</span></td>
+          </tr>
+          <tr>
+            <td class="left">Consensus 2+</td>
+            <td>338</td>
+            <td><span class="neg">39.9%</span></td>
+            <td><span class="pos">+$30.5</span></td>
+            <td><span class="pos">+$118.1</span></td>
+          </tr>
+          <tr>
+            <td class="left">Consensus 2+ & 50–90¢</td>
+            <td>106</td>
+            <td><span class="pos">57.5%</span></td>
+            <td><span class="pos">+$75.2</span></td>
+            <td><span class="pos">+$87.8</span></td>
+          </tr>
+          <tr>
+            <td class="left">Consensus 3+</td>
+            <td>118</td>
+            <td><span class="neg">42.4%</span></td>
+            <td><span class="pos">+$77.0</span></td>
+            <td><span class="pos">+$155.0</span></td>
+          </tr>
+          <tr>
+            <td class="left">Consensus 3+ & 50–90¢</td>
+            <td>30</td>
+            <td><span class="pos">66.7%</span></td>
+            <td><span class="pos">+$31.9</span></td>
+            <td><span class="pos">+$33.9</span></td>
+          </tr>
+          <tr>
+            <td class="left">Consensus 4 (all agree)</td>
+            <td>26</td>
+            <td><span class="neg">34.6%</span></td>
+            <td><span class="pos">+$23.5</span></td>
+            <td><span class="pos">+$14.6</span></td>
+          </tr>
+          <tr>
+            <td class="left">Consensus 4 & 50–90¢</td>
+            <td>7</td>
+            <td><span class="pos">57.1%</span></td>
+            <td><span class="pos">+$7.6</span></td>
+            <td><span class="pos">+$2.1</span></td>
+          </tr>
+  </tbody>
+</table>
+
+<h3>Top Bets — Consensus 3+ & Entry 50–90¢</h3>
+<p class="section-desc">Specific markets from the best strategy, sorted by P&L</p>
+<table>
+  <thead><tr><th class="left">Market</th><th>Side</th><th>Entry</th><th>Last</th><th>Agree</th><th>P&L ($10)</th></tr></thead>
+  <tbody>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/republican-presidential-nominee-2028" target="_blank">Republican Presidential Nominee 2028 / Robert F. Kennedy Jr.</a></td>
+            <td>No</td>
+            <td>51¢</td>
+            <td>98.4¢</td>
+            <td>4</td>
+            <td class="pos">+$9.3</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/measles-cases-in-us-by-february-28" target="_blank">Measles cases in U.S. by February 28? / 1200</a></td>
+            <td>No</td>
+            <td>58¢</td>
+            <td>97.2¢</td>
+            <td>3</td>
+            <td class="pos">+$6.8</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/wa-03-primary-winners" target="_blank">WA-03 Primary Winners / John Braun</a></td>
+            <td>Yes</td>
+            <td>50¢</td>
+            <td>81.0¢</td>
+            <td>3</td>
+            <td class="pos">+$6.2</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/number-of-tsa-passengers-february-16-february-22" target="_blank">Number of TSA passengers February 16 - February 22? / >17.5m</a></td>
+            <td>No</td>
+            <td>63¢</td>
+            <td>100.0¢</td>
+            <td>3</td>
+            <td class="pos">+$5.9</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/claude-5-released-by" target="_blank">Claude 5 released by…? / March 15, 2026</a></td>
+            <td>No</td>
+            <td>66¢</td>
+            <td>96.7¢</td>
+            <td>3</td>
+            <td class="pos">+$4.8</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/2nd-largest-company-end-of-february" target="_blank">2nd Largest company end of February? / Alphabet</a></td>
+            <td>No</td>
+            <td>61¢</td>
+            <td>86.0¢</td>
+            <td>3</td>
+            <td class="pos">+$4.1</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/delaware-democratic-senate-primary-winner" target="_blank">Delaware Democratic Senate Primary Winner / Christopher Beardsley</a></td>
+            <td>No</td>
+            <td>72¢</td>
+            <td>97.0¢</td>
+            <td>4</td>
+            <td class="pos">+$3.5</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/how-many-democratic-house-incumbents-will-not-win-their-primary" target="_blank">How many Democratic House Incumbents will not win their Primary? / 7-9</a></td>
+            <td>No</td>
+            <td>59¢</td>
+            <td>79.0¢</td>
+            <td>3</td>
+            <td class="pos">+$3.4</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/delaware-democratic-senate-primary-winner" target="_blank">Delaware Democratic Senate Primary Winner / Chris Coons</a></td>
+            <td>Yes</td>
+            <td>71¢</td>
+            <td>91.5¢</td>
+            <td>3</td>
+            <td class="pos">+$2.9</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/glove-above-in-february-2026" target="_blank">Counter-Strike Glove Index above ___ end of February? / $210</a></td>
+            <td>Yes</td>
+            <td>50¢</td>
+            <td>61.5¢</td>
+            <td>3</td>
+            <td class="pos">+$2.3</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/ky-06-republican-primary-winner" target="_blank">KY-06 Republican Primary Winner / Adam Perez Arquette</a></td>
+            <td>No</td>
+            <td>59¢</td>
+            <td>71.5¢</td>
+            <td>3</td>
+            <td class="pos">+$2.1</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/max-arctic-sea-ice-extent-this-winter" target="_blank">Max Arctic sea ice extent this winter? / 14.6-14.8m sq km</a></td>
+            <td>No</td>
+            <td>60¢</td>
+            <td>68.5¢</td>
+            <td>4</td>
+            <td class="pos">+$1.4</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/2nd-largest-company-end-of-march" target="_blank">2nd largest company end of March? / Alphabet</a></td>
+            <td>No</td>
+            <td>56¢</td>
+            <td>62.5¢</td>
+            <td>3</td>
+            <td class="pos">+$1.1</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/ky-06-republican-primary-winner" target="_blank">KY-06 Republican Primary Winner / Ryan Dotson</a></td>
+            <td>No</td>
+            <td>56¢</td>
+            <td>62.0¢</td>
+            <td>5</td>
+            <td class="pos">+$1.0</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/ukraine-officially-agrees-to-a-us-backed-ceasefire-framework-in-2025" target="_blank">Ukraine officially agrees to a US backed ceasefire framework by...? / June 30</a></td>
+            <td>No</td>
+            <td>68¢</td>
+            <td>74.0¢</td>
+            <td>3</td>
+            <td class="pos">+$0.8</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/glove-above-in-february-2026" target="_blank">Counter-Strike Glove Index above ___ end of February? / $270</a></td>
+            <td>No</td>
+            <td>50¢</td>
+            <td>52.0¢</td>
+            <td>3</td>
+            <td class="pos">+$0.4</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/glove-above-in-february-2026" target="_blank">Counter-Strike Glove Index above ___ end of February? / $200</a></td>
+            <td>Yes</td>
+            <td>50¢</td>
+            <td>51.5¢</td>
+            <td>3</td>
+            <td class="pos">+$0.3</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/cl-settle-jun-2026" target="_blank">What will Crude Oil (CL) settle at in June? / >$84</a></td>
+            <td>No</td>
+            <td>71¢</td>
+            <td>73.0¢</td>
+            <td>3</td>
+            <td class="pos">+$0.3</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/glove-above-in-february-2026" target="_blank">Counter-Strike Glove Index above ___ end of February? / $280</a></td>
+            <td>No</td>
+            <td>50¢</td>
+            <td>51.0¢</td>
+            <td>3</td>
+            <td class="pos">+$0.2</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/edgex-fdv-above-one-day-after-launch" target="_blank">edgeX FDV above ___ one day after launch? / $2B</a></td>
+            <td>No</td>
+            <td>75¢</td>
+            <td>75.5¢</td>
+            <td>4</td>
+            <td class="pos">+$0.1</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/trump-fully-suspends-entry-to-the-us-for-more-countries-by" target="_blank">Trump suspends U.S. entry for more countries by...? / December 31, 2026</a></td>
+            <td>Yes</td>
+            <td>70¢</td>
+            <td>69.0¢</td>
+            <td>3</td>
+            <td class="neg">$-0.1</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/trump-fully-suspends-entry-to-the-us-for-more-countries-by" target="_blank">Trump suspends U.S. entry for more countries by...? / June 30</a></td>
+            <td>No</td>
+            <td>62¢</td>
+            <td>58.5¢</td>
+            <td>4</td>
+            <td class="neg">$-0.6</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/tx-28-house-election-winner" target="_blank">TX-28 House Election Winner / Democratic Party</a></td>
+            <td>Yes</td>
+            <td>50¢</td>
+            <td>47.0¢</td>
+            <td>3</td>
+            <td class="neg">$-0.6</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/nj-02-house-election-winner" target="_blank">NJ-02 House Election Winner / Democratic Party</a></td>
+            <td>No</td>
+            <td>72¢</td>
+            <td>66.5¢</td>
+            <td>3</td>
+            <td class="neg">$-0.8</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/usisrael-strikes-iran-by" target="_blank">US/Israel strikes Iran by...? / February 28</a></td>
+            <td>No</td>
+            <td>86¢</td>
+            <td>78.5¢</td>
+            <td>3</td>
+            <td class="neg">$-0.9</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/cl-settle-jun-2026" target="_blank">What will Crude Oil (CL) settle at in June? / <$42</a></td>
+            <td>No</td>
+            <td>66¢</td>
+            <td>59.0¢</td>
+            <td>3</td>
+            <td class="neg">$-1.0</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/will-russia-capture-rodynske-by-september-15" target="_blank">Will Russia capture Rodynske by...? / March 31</a></td>
+            <td>No</td>
+            <td>59¢</td>
+            <td>49.5¢</td>
+            <td>3</td>
+            <td class="neg">$-1.6</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/spx-hit-jun-2026" target="_blank">What will S&P 500 (SPX) hit by end of June? / ↓ $6,600</a></td>
+            <td>Yes</td>
+            <td>76¢</td>
+            <td>56.0¢</td>
+            <td>4</td>
+            <td class="neg">$-2.6</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/ut-01-house-election-winner" target="_blank">UT-01 House Election Winner / Democratic Party</a></td>
+            <td>No</td>
+            <td>52¢</td>
+            <td>23.0¢</td>
+            <td>3</td>
+            <td class="neg">$-5.6</td>
+          </tr>
+          <tr>
+            <td class="left market-name"><a href="https://polymarket.com/event/measles-cases-in-us-by-february-28" target="_blank">Measles cases in U.S. by February 28? / 1150</a></td>
+            <td>Yes</td>
+            <td>68¢</td>
+            <td>7.5¢</td>
+            <td>4</td>
+            <td class="neg">$-8.9</td>
+          </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
